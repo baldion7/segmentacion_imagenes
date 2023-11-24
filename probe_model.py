@@ -29,7 +29,7 @@ model = load_model("model/modelo_entrenado.hdf5",
 
 
 # Carga de imagenes para probar el modelo:
-original_image = cv2.imread('dataset\\Tile 1\\image_part_001.png', 1)
+original_image = cv2.imread('dataset\\Tile 1\\images\\image_part_088.png', 1)
 new_size = (512, 512)
 test_img = cv2.resize(original_image, new_size)
 
@@ -65,15 +65,6 @@ for i in range(num_rows):
         predicted_img_test = np.argmax(prediction_test, axis=3)[0, :, :]
         row_predictions.append(predicted_img_test)
 
-        plt.figure(figsize=(8, 8))
-        plt.subplot(121)
-        plt.title('Original Patch')
-        plt.imshow(single_patch_img_test)
-        plt.subplot(122)
-        plt.title('Prediction Patch')
-        plt.imshow(predicted_img_test)
-        plt.show()
-
     row_prediction = np.concatenate(row_predictions, axis=1)
     all_predictions.append(row_prediction)
 
@@ -85,7 +76,7 @@ plt.subplot(231)
 plt.title('Original Image')
 plt.imshow(image_resized)
 plt.subplot(232)
-plt.title('Full Prediction Resized')
+plt.title('Prediction')
 plt.imshow(full_prediction_resized)
 plt.show()
 

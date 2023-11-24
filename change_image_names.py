@@ -2,7 +2,9 @@ import os
 
 ################################################################
 
-directorio_imagenes = "dataset\\Tile 1\\images"
+directorio_actual = os.getcwd()
+
+directorio_imagenes = directorio_actual + "\\dataset\\Tile 1\\images"
 
 # Prefijo y sufijo para el nuevo nombre de las imágenes
 prefijo = 'image_part_'

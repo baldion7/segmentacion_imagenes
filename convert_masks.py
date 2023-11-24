@@ -4,6 +4,8 @@ from PIL import Image
 
 ################################################################
 
+directorio_actual = os.getcwd()
+
 # Funcion para generar, guardar y renombrar las mascaras necesarias:
 def guardar_imagen(archivo_npy):
     # Cargar el archivo npy
@@ -34,12 +36,12 @@ def guardar_imagen(archivo_npy):
 
     # Guardar la imagen como PNG
     imagen = Image.fromarray(matriz_rgb)
-    imagen.save(os.path.join("dataset\\Tile 1\\masks", archivo_npy[:-4] + ".png"))
+    imagen.save(os.path.join(directorio_actual + "\\dataset\\Tile 1\\masks", archivo_npy[:-4] + ".png"))
 
 ################################################################
 
 # Cambiar al directorio de datos
-os.chdir("dataset\\Tile 1\\mask_npy")
+os.chdir(directorio_actual + "\\dataset\\Tile 1\\mask_npy")
 
 # Listar todos los archivos npy en el directorio
 archivos_npy = [archivo for archivo in os.listdir() if archivo.endswith(".npy")]
@@ -51,7 +53,7 @@ for archivo_npy in archivos_npy:
 
 ################################################################
 
-directorio_imagenes = "dataset\\Tile 1\\masks"
+directorio_imagenes = directorio_actual + "\\dataset\\Tile 1\\masks"
 
 # Prefijo y sufijo para el nuevo nombre de las imágenes
 prefijo = 'image_part_'
