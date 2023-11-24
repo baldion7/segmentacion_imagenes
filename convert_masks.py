@@ -2,6 +2,9 @@ import os
 import numpy as np
 from PIL import Image
 
+################################################################
+
+# Funcion para generar, guardar y renombrar las mascaras necesarias:
 def guardar_imagen(archivo_npy):
     # Cargar el archivo npy
     matriz_tridimensional = np.load(archivo_npy)
@@ -31,10 +34,12 @@ def guardar_imagen(archivo_npy):
 
     # Guardar la imagen como PNG
     imagen = Image.fromarray(matriz_rgb)
-    imagen.save(os.path.join("C:\\Users\\laura\\Downloads\\Segmentation\\dataset\\Tile 1\\masks", archivo_npy[:-4] + ".png"))
+    imagen.save(os.path.join("dataset\\Tile 1\\masks", archivo_npy[:-4] + ".png"))
+
+################################################################
 
 # Cambiar al directorio de datos
-os.chdir("C:\\Users\\laura\\Downloads\\Segmentation\\dataset\\Tile 1\\mask_npy")
+os.chdir("dataset\\Tile 1\\mask_npy")
 
 # Listar todos los archivos npy en el directorio
 archivos_npy = [archivo for archivo in os.listdir() if archivo.endswith(".npy")]
@@ -44,10 +49,9 @@ for archivo_npy in archivos_npy:
     # Guardar la imagen
     guardar_imagen(archivo_npy)
 
+################################################################
 
-
-    
-directorio_imagenes = "C:\\Users\\laura\\Downloads\\Segmentation\\dataset\\Tile 1\\masks"
+directorio_imagenes = "dataset\\Tile 1\\masks"
 
 # Prefijo y sufijo para el nuevo nombre de las imágenes
 prefijo = 'image_part_'
@@ -68,5 +72,4 @@ for id, nombre_archivo in enumerate(os.listdir(directorio_imagenes)):
 
 print("¡Renombrado completado!")
 
-
-
+################################################################

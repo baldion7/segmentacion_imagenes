@@ -1,6 +1,8 @@
 import os
 
-directorio_imagenes = "C:\\Users\\laura\\Downloads\\Segmentation\\dataset\\Tile 1\\images"
+################################################################
+
+directorio_imagenes = "dataset\\Tile 1\\images"
 
 # Prefijo y sufijo para el nuevo nombre de las imágenes
 prefijo = 'image_part_'
@@ -20,3 +22,5 @@ for id, nombre_archivo in enumerate(os.listdir(directorio_imagenes)):
         os.rename(ruta_antiguo, ruta_nuevo)
 
 print("¡Renombrado completado!")
+
+################################################################

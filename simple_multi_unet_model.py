@@ -2,7 +2,9 @@ from keras.models import Model
 from keras.layers import Input, Conv2D, MaxPooling2D, concatenate, Conv2DTranspose, Dropout
 from keras import backend as K
 
+################################################################
 
+# Funcion para obtener el indice de jacard:
 def jacard_coef(y_true, y_pred):
     y_true_f = K.flatten(y_true)
     y_pred_f = K.flatten(y_pred)
@@ -11,7 +13,7 @@ def jacard_coef(y_true, y_pred):
 
 ################################################################
 
-
+# Funcion que determina la arquitectura de red neuronal para el entrenamiento del modelo U-Net:
 def multi_unet_model(n_classes=5, IMG_HEIGHT=500, IMG_WIDTH=500, IMG_CHANNELS=3):
     inputs = Input((IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS))
     s = inputs
@@ -87,3 +89,5 @@ def multi_unet_model(n_classes=5, IMG_HEIGHT=500, IMG_WIDTH=500, IMG_CHANNELS=3)
     model = Model(inputs=[inputs], outputs=[outputs])
 
     return model
+
+################################################################

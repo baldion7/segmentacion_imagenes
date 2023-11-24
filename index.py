@@ -3,24 +3,23 @@ from simple_multi_unet_model import multi_unet_model, jacard_coef
 from keras.metrics import MeanIoU
 from sklearn.model_selection import train_test_split
 from keras.utils import to_categorical
+from matplotlib import pyplot as plt
+from patchify import patchify
+from PIL import Image
+from sklearn.preprocessing import MinMaxScaler
 import random
 import os
 import cv2
 import numpy as np
-from matplotlib import pyplot as plt
-from patchify import patchify
-from PIL import Image
 import segmentation_models as sm
-from sklearn.preprocessing import MinMaxScaler
 
 ###########################################################################
 
 scaler = MinMaxScaler()
-
 root_directory = 'dataset/'
-
 patch_size = 256
 
+# Cargar de imagenes y mascaras de entrenamiento:
 image_dataset = []
 for path, subdirs, files in os.walk(root_directory):
     dirname = path.split(os.path.sep)[-1]
@@ -85,6 +84,7 @@ plt.show()
 
 ###########################################################################
 
+# Asignacion de labels o etiquetas de color:
 Passable_Area = '#3C1098'.lstrip('#')
 Passable_Area = np.array(
     tuple(int(Passable_Area[i:i+2], 16) for i in (0, 2, 4)))  # 60, 16, 152
@@ -106,23 +106,19 @@ Unlabeled = np.array(
 
 label = single_patch_mask
 
-
+# Parametrizacion de labels en el dataset: 
 def rgb_to_2D_label(label):
-
     label_seg = np.zeros(label.shape, dtype=np.uint8)
     label_seg[np.all(label == Unlabeled, axis=-1)] = 0
     label_seg[np.all(label == Passable_Area, axis=-1)] = 1
     label_seg[np.all(label == Built_Area, axis=-1)] = 2
     label_seg[np.all(label == Green_Area, axis=-1)] = 3
     label_seg[np.all(label == Road, axis=-1)] = 4
-
     label_seg = label_seg[:, :, 0]
 
     return label_seg
 
-
 labels = []
-
 for i in range(mask_dataset.shape[0]):
     label = rgb_to_2D_label(mask_dataset[i])
     labels.append(label)
@@ -150,6 +146,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 #######################################
 
+# Generacion y guaradado del modelo:
 weights = [0.1666, 0.1666, 0.1666, 0.1666, 0.1666]
 dice_loss = sm.losses.DiceLoss(class_weights=weights)
 focal_loss = sm.losses.CategoricalFocalLoss()
@@ -161,10 +158,8 @@ IMG_CHANNELS = X_train.shape[3]
 
 metrics = ['accuracy', jacard_coef]
 
-
 def get_model():
     return multi_unet_model(n_classes=n_classes, IMG_HEIGHT=IMG_HEIGHT, IMG_WIDTH=IMG_WIDTH, IMG_CHANNELS=IMG_CHANNELS)
-
 
 model = get_model()
 model.compile(optimizer='adam', loss=total_loss, metrics=metrics)
@@ -181,6 +176,7 @@ model.save('model/modelo_entrenado.hdf5')
 
 ############################################################
 
+# Normalizacion y ajusted de entrada:
 BACKBONE = 'resnet34'
 preprocess_input = sm.get_preprocessing(BACKBONE)
 
@@ -204,6 +200,7 @@ history2 = model_resnet_backbone.fit(X_train_prepr,
 
 ###########################################################
 
+# Indices de perdida de datos, validacion y precision:
 history = history1
 loss = history.history['loss']
 val_loss = history.history['val_loss']
@@ -227,8 +224,9 @@ plt.ylabel('IoU')
 plt.legend()
 plt.show()
 
-##################################
+#######################################################################
 
+# Mendia del indice IoU del modelo generado:
 model = load_model("model/modelo_entrenado.hdf5",
                    custom_objects={'dice_loss_plus_1focal_loss': total_loss,
                                    'jacard_coef': jacard_coef})
